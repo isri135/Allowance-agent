@@ -1,6 +1,6 @@
-# AI Shopper
+# Allowance Agent: AI Shopper
 
-A terminal shopping agent. Tell it what you want; it searches with **Channel3**, compares retailer offers, builds a cart within your budget, and pays through **PayPal sandbox** (test money).
+Built for the PayPal hackathon. A terminal shopping agent. Tell it what you want; it searches with **Channel3**, compares retailer offers, builds a cart within your budget, and pays through **PayPal sandbox** (test money).
 
 ```
 you › I need a waterproof hiking jacket, men's medium, under $150
@@ -23,8 +23,11 @@ shopper › Payment captured (COMPLETED).
 
 ## Setup
 
-1. `pip install -r requirements.txt`
-2. Copy `.env.example` to `.env` (same folder as `shopper.py`) and fill it in. The shopper loads it automatically on Windows, Mac and Linux.
+The code lives in the `ai-shopper/` folder; run every command from there.
+
+1. `cd ai-shopper` and `pip install -r requirements.txt`
+2. Copy `.env.example` to `.env` (same folder as `shopper.py`) and fill it in. The shopper loads it automatically on Windows, Mac and Linux. `.env` is gitignored, so your keys stay local.
+   - **Anthropic key**: from console.anthropic.com. `SHOPPER_MODEL` picks the Claude model.
    - **Channel3 key**: from your Channel3 dashboard.
    - **PayPal sandbox app**: developer.paypal.com → Apps & Credentials → **Sandbox** → create app → copy Client ID and Secret.
    - **Sandbox buyer**: developer.paypal.com → Testing Tools → Sandbox Accounts. Use the **Personal** account's email/password when you open the approval link.
@@ -34,11 +37,13 @@ Run tests (no keys needed): `pytest -q`
 
 ## How it works
 
-| File | Role |
+| File (in `ai-shopper/`) | Role |
 |---|---|
 | `shopper.py` | Claude tool-use loop, cart, guardrails, CLI |
 | `channel3_client.py` | `POST /v1/search` and `GET /v1/products/{id}` |
 | `paypal_sandbox.py` | OAuth token, create order, get order, capture (Orders v2) |
+| `return_page.py` | Local confirmation page PayPal redirects to after approval |
+| `test_shopper.py` | Tests (no keys or network needed) |
 
 Tools the agent can call: `search_products`, `get_product`, `add_to_cart`, `remove_from_cart`, `view_cart`, `checkout`, `complete_payment`.
 
